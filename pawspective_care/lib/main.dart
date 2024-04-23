@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pawspective_care/screens/starting.dart';
+import 'package:proyek4/screens/home_page.dart';
+import 'package:proyek4/pallete.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,12 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-      
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.green,
       ),
       debugShowCheckedModeBanner: false,
-      home: const starting(),
+      home: homePage(),
     );
   }
 }
