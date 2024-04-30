@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:proyek4/models/chat_users_model.dart';
-import 'package:proyek4/widgets/convo_list.dart';
-import 'package:proyek4/pallete.dart';
+import 'package:pawspective_care/models/chat_users_model.dart';
+import 'package:pawspective_care/widgets/convo_list.dart';
+import 'package:pawspective_care/pallete.dart';
 
 class AIChatPage extends StatefulWidget {
   const AIChatPage({super.key});

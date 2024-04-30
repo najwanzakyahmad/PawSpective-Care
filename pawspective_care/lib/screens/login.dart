@@ -87,13 +87,25 @@ class _LoginPageState extends State<LoginPage> {
               // Google sign-in button
               Padding(
                 padding: EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset('assets/images/google.png', height: 24), // Replace with your Google sign-in icon image
-                    Text('  Sign in with Google'),
-                  ],
+                child: ElevatedButton(
+                  
+                  onPressed: () {
+                    // Handle login logic here
+                    // You can call an API or perform authentication here
+                    print('Login button pressed. Username: ${_usernameController.text}, Password: ${_passwordController.text}');
+                  },
+                  child: Text('LOGIN'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1F2544), // Perbaikan di sini
+                  ),
                 ),
+                // child: Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: <Widget>[
+                //     Image.asset('assets/images/google.png', height: 24), // Replace with your Google sign-in icon image
+                //     Text('  Sign in with Google'),
+                //   ],
+                // ),
               ),
 
               // Text for sign-up

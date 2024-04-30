@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyek4/screens/chat_detail_page.dart';
+import 'package:pawspective_care/screens/chat_detail_page.dart';
 
 class ConversationList extends StatefulWidget {
   String name;

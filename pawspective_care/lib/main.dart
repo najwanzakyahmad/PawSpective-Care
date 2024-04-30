@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:proyek4/screens/home_page.dart';
-import 'package:proyek4/pallete.dart';
-
+import 'package:pawspective_care/screens/login.dart';
+import 'package:pawspective_care/pallete.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -18,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       debugShowCheckedModeBanner: false,
-      home: homePage(),
+      home: LoginPage(),
     );
   }
 }

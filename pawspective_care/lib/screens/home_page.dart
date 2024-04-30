@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:proyek4/screens/bottom_navbar.dart';
-import 'package:proyek4/screens/chat_page.dart';
-import 'package:proyek4/pallete.dart';
+import 'package:pawspective_care/screens/bottom_navbar.dart';
+import 'package:pawspective_care/screens/chat_page.dart';
+import 'package:pawspective_care/pallete.dart';
 
 class homePage extends StatelessWidget {
   @override

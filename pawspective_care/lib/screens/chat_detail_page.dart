@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyek4/pallete.dart';
+import 'package:pawspective_care/pallete.dart';
 
 class ChatMessage {
   final String messageContent;
