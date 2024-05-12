@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pawspective_care/screens/homepage.dart';
+import 'package:pawspective_care/screens/HomePage.dart';
 
 class starting extends StatelessWidget {
   const starting({super.key});
@@ -10,14 +10,15 @@ class starting extends StatelessWidget {
     Future.delayed(const Duration(seconds: 3)).then((value) => {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => const homepage(),
+          builder: (context) => const HomePage(),
         ), 
         (route) => false
       )
     });
 
     return Scaffold(
-      body: Stack(children: [Image.asset('assets/images/starting.png', fit: BoxFit.fill)],),
+      // body: Stack(children: [Image.asset('assets/images/starting.png', fit: BoxFit.fill)],),
+      backgroundColor: Color(0xff1f2544),   
     );
   }
 }
