@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pawspective_care/screens/HomePage.dart';
+import 'package:pawspective_care/screens/login.dart';
 
 class starting extends StatelessWidget {
   const starting({super.key});
@@ -10,7 +10,7 @@ class starting extends StatelessWidget {
     Future.delayed(const Duration(seconds: 3)).then((value) => {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => const HomePage(),
+          builder: (context) => LoginPage(),
         ), 
         (route) => false
       )
