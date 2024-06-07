@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pawspective_care/Services/globals.dart';
 
 import 'package:pawspective_care/screens/HomePage.dart';
 import 'package:pawspective_care/network/api.dart';
@@ -15,7 +16,8 @@ import 'navbar.dart';
 
 
 class MyPetField extends StatefulWidget {
-  const MyPetField({Key? key}) : super(key: key);
+  final String userId;
+  const MyPetField({Key? key, required this.userId}) : super(key: key);
 
   @override
   _MyPetFieldState createState() => _MyPetFieldState();
@@ -121,12 +123,18 @@ class _MyPetFieldState extends State<MyPetField>{
                   ),
                   ElevatedButton(
                     onPressed: () {
-                        sendDataToBackend(
-                          context,
-                          parent!, petName!, speciesName!,
-                          selectedDinner!, selectedBreakFast!, selectedLunch!,
-                          selectedDateBirth!, selectedDateVaccine!,
-                        );
+                        if(speciesName == null || petName == null || selectedDateBirth == null || selectedDateVaccine == null ||
+                        selectedBreakFast == null || selectedLunch == null || selectedDinner == null || parent == null){
+                          errorSnackBar(context, "All fields must be filled in");
+                        }
+                        else{
+                          Api.sendDataToBackend(
+                            context,widget.userId,
+                            parent!, petName!, speciesName!,
+                            selectedDinner!, selectedBreakFast!, selectedLunch!,
+                            selectedDateBirth!, selectedDateVaccine!,
+                          );
+                        }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.thirdColor,
@@ -152,7 +160,7 @@ class _MyPetFieldState extends State<MyPetField>{
               // Ke halaman MyPet
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyPet()),
+                MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId)),
               );
               break;
             // case 1:
@@ -166,7 +174,7 @@ class _MyPetFieldState extends State<MyPetField>{
               // Ke halaman MyPet
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => HomePage(userId: widget.userId)),
               );
               break;
             // case 3:

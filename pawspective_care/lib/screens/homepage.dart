@@ -7,7 +7,8 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:pawspective_care/screens/navbar.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final String userId;
+  const HomePage({Key? key, required this.userId}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    var scaffold = Scaffold(
+    return Scaffold(
       backgroundColor: Palette.mainColor,
       body: Stack(
         children: [
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               // Ke halaman MyPet
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyPet()),
+                MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId)),
               );
               break;
             // case 1:
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
               // Ke halaman MyPet
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => HomePage(userId: widget.userId)),
               );
               break;
             // case 3:
@@ -93,7 +94,6 @@ class _HomePageState extends State<HomePage> {
         notchBottomBarController: NotchBottomBarController(index: _selectedIndex),
       ),
     );
-    return scaffold;
   }
 
   DraggableScrollableSheet _article() {

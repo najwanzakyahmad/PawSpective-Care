@@ -6,8 +6,7 @@ import 'HomePage.dart';
 import 'MyPetField.dart';
 import 'MyPetFieldEdit.dart';
 import 'navbar.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:pawspective_care/network/api.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,7 +14,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 
 class MyPet extends StatefulWidget {
-  const MyPet({Key? key}) : super(key: key);
+  final String userId;
+  const MyPet({Key? key, required this.userId}) : super(key: key);
 
   @override
   _MyPetState createState() => _MyPetState();
@@ -25,11 +25,12 @@ class _MyPetState extends State<MyPet> {
   int _selectedIndex = 0; 
   String id = '';
   List<String> backendData = [];
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    getDataNameFromBackEnd();
+    _getDataNameFromBackEnd();
   }
 
 
@@ -44,53 +45,19 @@ class _MyPetState extends State<MyPet> {
     );
   }
 
-  Future<void> getDataNameFromBackEnd() async {
-    try {
-      final url = 'http://10.0.2.2:8000/api/mypet/getName';
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonData = json.decode(response.body);
-
-        if (jsonData.containsKey('data') && jsonData['data'] is List<dynamic>) {
-          List<String> processedData = [];
-
-          // Iterasi melalui setiap entri dalam data
-          for (var entry in jsonData['data']) {
-            // Periksa apakah entri memiliki kunci 'id' dan 'Parent'
-            if (entry.containsKey('id') && entry.containsKey('Parent')) {
-              // Tambahkan kombinasi 'id' dan 'Parent' ke dalam processedData
-              processedData.add('${entry['id']} - ${entry['Parent']}');
-            }
-          }
-
-          setState(() {
-            backendData = processedData;
-          });
-          print('Response: ${response.body}');
-        } else {
-          print('Failed to get data. Invalid response format.');
-        }
-      } else {
-        print('Failed to get data. Status code: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error: $error');
-    }
+  Future<void> _getDataNameFromBackEnd() async {
+    setState(() {
+        isLoading = true;
+    });
+    final data = await Api.getDataNameFromBackEnd(backendData, isLoading, widget.userId);
+    setState(() {
+      backendData = data;
+      isLoading = false;
+    });
   }
 
-
-  Future<void> deleteDataFromBackend(BuildContext context, String id) async {
-    final url = 'http://10.0.2.2:8000/api/mypet/$id'; // Gunakan ID untuk menentukan data yang akan dihapus
-    final response = await http.delete(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      print('Data berhasil dihapus!');
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> MyPet()));
-    } else {
-      print('Gagal menghapus data. Kode status: ${response.statusCode}');
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> MyPet()));
-    }
+  Future<void> _deleteDataPet(BuildContext context, String id, String userId) async {
+    await Api.deleteDataFromBackend(context, id, userId);
   }
 
 
@@ -99,40 +66,42 @@ class _MyPetState extends State<MyPet> {
     return Scaffold(
       backgroundColor: Palette.mainColor,
       body: Center(
-        child: AnimationList(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: RichText(
-                textAlign: TextAlign.left,
-                text: TextSpan(
-                  text: "MY PET",
-                  style: GoogleFonts.inter(
-                    fontSize: 45,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
+        child: isLoading
+          ? CircularProgressIndicator() // Tampilkan animasi loading jika isLoading true
+          : AnimationList(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
+                      text: "MY PET",
+                      style: GoogleFonts.inter(
+                        fontSize: 45,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 40),
+                // Gunakan map untuk mengubah setiap item dalam backendData menjadi widget
+                ...backendData.map((data) => buildPetContainer(data)).toList(),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => MyPetField(userId: widget.userId)),
+                    );
+                  },
+                  icon: SvgPicture.asset(
+                    'assets/svgs/icon plus.svg',
+                  ),
+                )
+              ],
+              duration: 1000,
+              reBounceDepth: 10.0,
             ),
-            const SizedBox(height: 40),
-            // Gunakan map untuk mengubah setiap item dalam backendData menjadi widget
-            ...backendData.map((data) => buildPetContainer(data)).toList(),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => MyPetField()),
-                );
-              },
-              icon: SvgPicture.asset(
-                'assets/svgs/icon plus.svg',
-              ),
-            )
-          ],
-          duration: 1000,
-          reBounceDepth: 10.0,
-        ),
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         onTap: (index) {
@@ -145,7 +114,7 @@ class _MyPetState extends State<MyPet> {
               // Ke halaman MyPet
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyPet()),
+                MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId)),
               );
               break;
             // case 1:
@@ -159,7 +128,7 @@ class _MyPetState extends State<MyPet> {
               // Ke halaman MyPet
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => HomePage(userId: widget.userId)),
               );
               break;
             // case 3:
@@ -212,7 +181,7 @@ class _MyPetState extends State<MyPet> {
                   child: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      text: data.split(' - ')[1], // Ganti teks "Pussy" dengan data
+                      text: data.split(' - ')[1], 
                       style: GoogleFonts.inter(
                         fontSize: 16,
                         color: Colors.white,
@@ -225,11 +194,11 @@ class _MyPetState extends State<MyPet> {
               ],
             ),
             const SizedBox(width: 40),
-            IconButton(
+              IconButton(
               onPressed: () {
                 Navigator.push(
                   context, 
-                  MaterialPageRoute(builder: (context)=> MyPetField())
+                  MaterialPageRoute(builder: (context) => MyPetField(userId: widget.userId))
                 );
               }, 
               icon: SvgPicture.asset('assets/svgs/icon book.svg'),
@@ -240,7 +209,7 @@ class _MyPetState extends State<MyPet> {
               onPressed: (){
                 Navigator.push(
                   context, 
-                  MaterialPageRoute(builder: (context) => MyPetFieldEdit(id: data.split(' - ')[0]))
+                  MaterialPageRoute(builder: (context) => MyPetFieldEdit(id: data.split(' - ')[0], userId: widget.userId))
                 );
               }, 
               icon: SvgPicture.asset('assets/svgs/icon edit.svg'),
@@ -248,10 +217,8 @@ class _MyPetState extends State<MyPet> {
             
             const SizedBox(width: 20),
             IconButton(
-              onPressed: (){
-                Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) => MyPet()));
+              onPressed: () async {
+                await _deleteDataPet(context, data.split(' - ')[0], widget.userId);
               }, 
               icon: SvgPicture.asset('assets/svgs/icon delete.svg'),
             )
@@ -261,5 +228,6 @@ class _MyPetState extends State<MyPet> {
       ),
     );
   }
-
 }
+        
+

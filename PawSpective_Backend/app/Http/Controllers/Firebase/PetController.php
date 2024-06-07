@@ -23,6 +23,7 @@ class PetController extends Controller
     {
         try {
             $validatedData = $request->validate([
+                'OwnerId' => 'required',
                 'Parent' => 'required',
                 'PetName' => 'required',
                 'SpeciesName' => 'required',
@@ -40,6 +41,7 @@ class PetController extends Controller
 
             $postData = [
                 'idPet' => $newDocId, 
+                'OwnerId' => $request->input('OwnerId'),
                 'Parent' => $request->input('Parent'),
                 'PetName' => $request->input('PetName'),
                 'SpeciesName' => $request->input('SpeciesName'),
@@ -59,13 +61,17 @@ class PetController extends Controller
     }
 
 
-    public function get()
+    public function get($idPet)
     {
         try {
             $data = $this->database->getReference($this->tablename)->getValue();
 
             if (!empty($data)) {
-                return response()->json(['success' => true, 'data' => $data]);
+                if (isset($data[$idPet])) {
+                    return response()->json(['success' => true, 'data' => $data[$idPet]]);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Data not found for the specified id', $idPet]);
+                }
             } else {
                 return response()->json(['success' => false, 'message' => 'No data found']);
             }
@@ -74,7 +80,7 @@ class PetController extends Controller
         }
     }
 
-    public function getName()
+    public function getNameByOwnerId($OwnerId)
     {
         try {
             $data = $this->database->getReference($this->tablename)->getValue();
@@ -83,7 +89,7 @@ class PetController extends Controller
 
             if (!empty($data)) {
                 foreach ($data as $id => $entry) {
-                    if (isset($entry['Parent'])) {
+                    if (isset($entry['OwnerId']) && $entry['OwnerId'] == $OwnerId && isset($entry['Parent'])) {
                         $parentsWithId[] = [
                             'id' => $id,
                             'Parent' => $entry['Parent']
@@ -96,7 +102,7 @@ class PetController extends Controller
                 }
             }
 
-            return response()->json(['success' => false, 'message' => 'No data found']);
+            return response()->json(['success' => false, 'message' => 'No data found for the specified OwnerId']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
@@ -104,47 +110,6 @@ class PetController extends Controller
 
 
 
-    public function getDataById($id)
-    {
-        try {
-            $data = $this->database->getReference($this->tablename)->getValue();
-
-            if (!empty($data)) {
-                if (isset($data[$id])) {
-                    $entry = $data[$id];
-
-                    $speciesName = isset($entry['SpeciesName']) ? $entry['SpeciesName'] : null;
-                    $parent = isset($entry['Parent']) ? $entry['Parent'] : null;
-                    $petName = isset($entry['PetName']) ? $entry['PetName'] : null;
-                    $selectedBreakFast = isset($entry['selectedBreakFast']) ? $entry['selectedBreakFast'] : null;
-                    $selectedLunch = isset($entry['selectedLunch']) ? $entry['selectedLunch'] : null;
-                    $selectedDinner = isset($entry['selectedDinner']) ? $entry['selectedDinner'] : null;
-                    $selectedDateBirth = isset($entry['selectedDateBirth']) ? $entry['selectedDateBirth'] : null;
-                    $selectedDateVaccine = isset($entry['selectedDateVaccine']) ? $entry['selectedDateVaccine'] : null;
-
-                    return response()->json([
-                        'success' => true,
-                        'data' => [
-                            'speciesName' => $speciesName,
-                            'parent' => $parent,
-                            'petName' => $petName,
-                            'selectedBreakFast' => $selectedBreakFast,
-                            'selectedLunch' => $selectedLunch,
-                            'selectedDinner' => $selectedDinner,
-                            'selectedDateBirth' => $selectedDateBirth,
-                            'selectedDateVaccine' => $selectedDateVaccine,
-                        ]
-                    ]);
-                } else {
-                    return response()->json(['success' => false, 'message' => 'No data found for the specified ID']);
-                }
-            } else {
-                return response()->json(['success' => false, 'message' => 'No data found']);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
-        }
-    }
 
     public function update(Request $request, $id)
     {

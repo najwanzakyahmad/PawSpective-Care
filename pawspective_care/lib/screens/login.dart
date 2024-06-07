@@ -8,6 +8,7 @@ import 'package:pawspective_care/RoundedButton.dart';
 import 'package:pawspective_care/screens/homepage.dart';
 import 'package:pawspective_care/screens/starting.dart';
 import 'package:pawspective_care/screens/signup.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import '../pallete.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,25 +22,53 @@ class _LoginPageState extends State<LoginPage> {
   // Text editing controllers for username and password fields
   String _email = '';
   String _password = '';
+  bool _isLoading = false; // Tambahkan variabel _isLoading untuk mengontrol animasi loading
 
   void loginPressed() async {
     if (_email.isNotEmpty && _password.isNotEmpty) {
-      http.Response response = await AuthServices.login(_email, _password);
-      Map<String, dynamic> responseMap = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => const HomePage(),
-          ),
-        );
-      } else {
-        errorSnackBar(context, responseMap.values.first);
+      setState(() {
+        _isLoading = true; // Set isLoading ke true saat proses login dimulai
+      });
+      try {
+        http.Response response = await AuthServices.login(_email, _password);
+        Map<String, dynamic> responseMap = jsonDecode(response.body);
+        
+        if (response.statusCode == 200) {
+          String token = responseMap['token'];
+          print('Token: $token'); // Log the token
+          
+          Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+          print('Decoded Token: $decodedToken'); // Log the decoded token
+          
+          String? userId = decodedToken['user_id'];
+          
+          if (userId != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => HomePage(userId: userId),
+              ),
+            );
+          } else {
+            errorSnackBar(context, 'Invalid token: uid is null');
+          }
+        } else {
+          errorSnackBar(context, responseMap.values.first);
+        }
+      } catch (e) {
+        errorSnackBar(context, 'Error during login');
+        print('Error: $e');
+      } finally {
+        setState(() {
+          _isLoading = false; // Set isLoading ke false setelah proses login selesai
+        });
       }
     } else {
-      errorSnackBar(context, 'enter all fields');
+      errorSnackBar(context, 'Enter all fields');
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +149,13 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  RoundedButton(btnText: 'LOGIN', onBtnPressed: loginPressed),
+                  ElevatedButton(
+                    onPressed: _isLoading ? null : loginPressed, // Nonaktifkan tombol jika isLoading true
+                    child: _isLoading // Tampilkan CircularProgressIndicator jika isLoading true, jika tidak tampilkan teks tombol
+                        ? CircularProgressIndicator() 
+                        : Text("LOGIN"),
+                  ),
+
                   const SizedBox(height: 30),
 
                   Container(width: 250,

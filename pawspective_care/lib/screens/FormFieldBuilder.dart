@@ -215,7 +215,9 @@ class FormFieldsBuilder {
   }
 
   static Widget buildTimeFieldEdit(String labelText, TimeOfDay? initialValue, Function(TimeOfDay?) onSave) {
-    final initialDateTime = DateTime.now().add(Duration(hours: initialValue?.hour ?? 0, minutes: initialValue?.minute ?? 0));
+    final initialDateTime = initialValue != null
+        ? DateTime(0).add(Duration(hours: initialValue.hour, minutes: initialValue.minute))
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,7 +228,7 @@ class FormFieldsBuilder {
         ),
         DateTimeField(
           format: format,
-          initialValue: initialDateTime, 
+          initialValue: initialDateTime,
           style: TextStyle(color: Palette.mainColor),
           decoration: InputDecoration(
             fillColor: Palette.fourthColor,
@@ -254,5 +256,6 @@ class FormFieldsBuilder {
       ],
     );
   }
+
 
 }
