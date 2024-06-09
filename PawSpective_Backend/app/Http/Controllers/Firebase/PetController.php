@@ -89,10 +89,10 @@ class PetController extends Controller
 
             if (!empty($data)) {
                 foreach ($data as $id => $entry) {
-                    if (isset($entry['OwnerId']) && $entry['OwnerId'] == $OwnerId && isset($entry['Parent'])) {
+                    if (isset($entry['OwnerId']) && $entry['OwnerId'] == $OwnerId && isset($entry['PetName'])) {
                         $parentsWithId[] = [
                             'id' => $id,
-                            'Parent' => $entry['Parent']
+                            'PetName' => $entry['PetName']
                         ];
                     }
                 }

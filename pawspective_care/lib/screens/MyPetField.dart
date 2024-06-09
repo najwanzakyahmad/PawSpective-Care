@@ -11,6 +11,7 @@ import 'package:pawspective_care/screens/HomePage.dart';
 import 'package:pawspective_care/network/api.dart';
 import 'package:pawspective_care/screens/FormFieldBuilder.dart';
 import 'package:pawspective_care/pallete.dart';
+import 'Information.dart';
 import 'MyPet.dart';
 import 'navbar.dart';
 
@@ -31,6 +32,7 @@ class _MyPetFieldState extends State<MyPetField>{
   DateTime? selectedDateVaccine, selectedDateBirth; 
   TimeOfDay? selectedBreakFast = TimeOfDay(hour: 0, minute: 0);
   TimeOfDay? selectedLunch, selectedDinner;
+  bool _isLoading = false;
   
 
   void onChanged(String? value) {
@@ -122,27 +124,44 @@ class _MyPetFieldState extends State<MyPetField>{
                     child: Text('Back', style:GoogleFonts.inter( color: Colors.white,),),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                        if(speciesName == null || petName == null || selectedDateBirth == null || selectedDateVaccine == null ||
-                        selectedBreakFast == null || selectedLunch == null || selectedDinner == null || parent == null){
-                          errorSnackBar(context, "All fields must be filled in");
-                        }
-                        else{
-                          Api.sendDataToBackend(
-                            context,widget.userId,
+                    onPressed: () async {
+                      setState(() {
+                        _isLoading = true; 
+                      });
+
+                      if(speciesName == null || petName == null || selectedDateBirth == null || selectedDateVaccine == null ||
+                        selectedBreakFast == null || selectedLunch == null || selectedDinner == null || parent == null) {
+                        errorSnackBar(context, "All fields must be filled in");
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      } else {
+                        try {
+                          await Api.sendDataToBackend(
+                            context, widget.userId,
                             parent!, petName!, speciesName!,
                             selectedDinner!, selectedBreakFast!, selectedLunch!,
                             selectedDateBirth!, selectedDateVaccine!,
                           );
+                        } catch (e) {
+                          // Handle error
+                          errorSnackBar(context, "An error occurred");
+                        } finally {
+                          setState(() {
+                            _isLoading = false; 
+                          });
                         }
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.thirdColor,
                     ),
-                    child: 
-                    Text('Next', style:GoogleFonts.inter( color: Colors.white,),),
-                  ),
-                  
+                    child: _isLoading
+                      ? CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : Text('Next', style: GoogleFonts.inter(color: Colors.white)),
+                  ), 
                 ]
               ),    
             ],
@@ -163,13 +182,13 @@ class _MyPetFieldState extends State<MyPetField>{
                 MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId)),
               );
               break;
-            // case 1:
-            //   // Ke halaman MyDoctor
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (context) => MyDoctor()),
-            //   );
-            //   break;
+            case 1:
+              // Ke halaman MyDoctor
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Information(userId : widget.userId)),
+              );
+              break;
             case 2:
               // Ke halaman MyPet
               Navigator.push(

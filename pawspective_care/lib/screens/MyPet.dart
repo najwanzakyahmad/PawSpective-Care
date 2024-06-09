@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animation_list/animation_list.dart';
 
 import 'package:pawspective_care/pallete.dart';
+import 'package:pawspective_care/screens/Information.dart';
 import 'HomePage.dart';
 import 'MyPetField.dart';
 import 'MyPetFieldEdit.dart';
@@ -117,13 +118,13 @@ class _MyPetState extends State<MyPet> {
                 MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId)),
               );
               break;
-            // case 1:
-            //   // Ke halaman MyDoctor
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (context) => MyDoctor()),
-            //   );
-            //   break;
+            case 1:
+              // Ke halaman MyDoctor
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Information(userId : widget.userId)),
+              );
+              break;
             case 2:
               // Ke halaman MyPet
               Navigator.push(

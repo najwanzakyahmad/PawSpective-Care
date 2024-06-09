@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pawspective_care/pallete.dart';
+import 'package:pawspective_care/screens/Information.dart';
 import 'package:pawspective_care/screens/MyPet.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:pawspective_care/screens/navbar.dart';
+import 'DiscussionPage.dart';
+import 'package:pawspective_care/network/api.dart';
 
 class HomePage extends StatefulWidget {
   final String userId;
@@ -15,7 +18,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 2; 
+  int _selectedIndex = 2;
+  String userName = '';
+
+  Future<void> getName() async {
+    String name = await Api.getUserById(widget.userId);
+    setState(() {
+      userName = name;
+    });
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    getName();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +76,13 @@ class _HomePageState extends State<HomePage> {
                 MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId)),
               );
               break;
-            // case 1:
-            //   // Ke halaman MyDoctor
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (context) => ChatPage()),
-            //   );
-            //   break;
+            case 1:
+              // Ke halaman MyDoctor
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Information(userId: widget.userId)),
+              );
+              break;
             case 2:
               // Ke halaman MyPet
               Navigator.push(
@@ -347,7 +364,7 @@ class _HomePageState extends State<HomePage> {
                   RichText(
                     textAlign: TextAlign.left,
                     text: TextSpan(
-                      text: "HELLO\nUSER!",
+                      text: 'HELLO\n $userName !',
                       style: GoogleFonts.inter(
                         fontSize: 45,
                         color: Colors.white,

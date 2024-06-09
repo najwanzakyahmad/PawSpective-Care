@@ -18,11 +18,19 @@ class _SignUpPageState extends State<SignUpPage> {
   String _email = '';
   String _password = '';
   String _name = '';
+  bool _isLoading = false;
 
   void createAccountPressed() async {
     bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(_email);
     if (emailValid) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Simulasi proses pembuatan akun
+      await Future.delayed(Duration(seconds: 2));
+
       http.Response response = await AuthServices.register(_name, _email, _password);
       Map responseMap = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -40,6 +48,10 @@ class _SignUpPageState extends State<SignUpPage> {
     } else {
       errorSnackBar(context, 'Email not valid');
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void errorSnackBar(BuildContext context, String message) {
@@ -145,16 +157,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    RoundedButton(
-                      btnText: 'SIGN UP',
-                      onBtnPressed: () {
-                       if(_name.isEmpty|| _email.isEmpty || _password.isEmpty){
-                        errorSnackBar(context, "All fields must be filled in");
-                       }
-                       else{
-                        createAccountPressed();
-                       } 
-                      }
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : createAccountPressed, // Nonaktifkan tombol jika isLoading true
+                      child: _isLoading // Tampilkan CircularProgressIndicator jika isLoading true, jika tidak tampilkan teks tombol
+                          ? CircularProgressIndicator() 
+                          : Text("SIGN UP"),
                     ),
                     const SizedBox(
                       height: 30,

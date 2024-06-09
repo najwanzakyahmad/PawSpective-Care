@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pawspective_care/screens/HomePage.dart';
 import 'package:pawspective_care/network/api.dart';
+import 'Information.dart';
 import 'navbar.dart';
 import 'package:pawspective_care/screens/FormFieldBuilder.dart';
 import 'package:pawspective_care/pallete.dart';
@@ -116,6 +117,13 @@ class _MyPetFieldEditState extends State<MyPetFieldEdit> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId)),
+              );
+              break;
+            case 1:
+              // Ke halaman MyDoctor
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Information(userId : widget.userId)),
               );
               break;
             case 2:

@@ -9,6 +9,7 @@ import 'package:pawspective_care/screens/homepage.dart';
 import 'package:pawspective_care/screens/starting.dart';
 import 'package:pawspective_care/screens/signup.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../network/api.dart';
 import '../pallete.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,15 +20,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Text editing controllers for username and password fields
   String _email = '';
   String _password = '';
-  bool _isLoading = false; // Tambahkan variabel _isLoading untuk mengontrol animasi loading
+  bool _isLoading = false; 
 
   void loginPressed() async {
     if (_email.isNotEmpty && _password.isNotEmpty) {
       setState(() {
-        _isLoading = true; // Set isLoading ke true saat proses login dimulai
+        _isLoading = true; 
       });
       try {
         http.Response response = await AuthServices.login(_email, _password);
@@ -40,9 +40,11 @@ class _LoginPageState extends State<LoginPage> {
           Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
           print('Decoded Token: $decodedToken'); // Log the decoded token
           
-          String? userId = decodedToken['user_id'];
+          String email = decodedToken['email'];
+          String userId = await Api.getIdByEmail(email);
           
-          if (userId != null) {
+          if (userId.isNotEmpty) {
+            print('userId : $userId');
             Navigator.push(
               context,
               MaterialPageRoute(

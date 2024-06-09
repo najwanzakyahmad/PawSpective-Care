@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pawspective_care/screens/DiscussionPage.dart';
 import 'package:pawspective_care/screens/MyPet.dart';
 import 'package:pawspective_care/screens/MyPetField.dart';
 import 'package:pawspective_care/screens/MyPetFieldEdit.dart';
+
+import '../screens/DiscussionQuestion.dart';
 
 class Api {
 
@@ -19,8 +22,8 @@ class Api {
           List<String> processedData = [];
 
           for (var entry in jsonData['data']) {
-            if (entry.containsKey('id') && entry.containsKey('Parent')) {
-              processedData.add('${entry['id']} - ${entry['Parent']}');
+            if (entry.containsKey('id') && entry.containsKey('PetName')) {
+              processedData.add('${entry['id']} - ${entry['PetName']}');
             }
           }
 
@@ -59,7 +62,6 @@ class Api {
       print('Error: $error');
     }
   }
-
 
   static Future<void> sendDataToBackend(
       BuildContext context, String userId,
@@ -127,7 +129,6 @@ class Api {
     }
   }
 
-
   // Fungsi untuk menghapus data
   static Future<void> deleteDataFromBackend(BuildContext context, String id, String userId) async {
     final url = 'http://10.0.2.2:8000/api/mypet/$id'; // Gunakan ID untuk menentukan data yang akan dihapus
@@ -138,6 +139,157 @@ class Api {
       Navigator.push(context, MaterialPageRoute(builder: (context)=> MyPet(userId: userId)));
     } else {
       print('Gagal menghapus data. Kode status: ${response.statusCode}');
+    }
+  }
+
+  static Future<void> getQuestion(Function(Map<String, dynamic>) onDataReceived) async {
+    try {
+      final url = 'http://10.0.2.2:8000/api/discussion/question';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.body);
+
+        if (jsonData.containsKey('data') && jsonData['data'] != null) {
+          Map<String, dynamic> data = jsonData['data'];
+          onDataReceived(data); 
+        } else {
+          print('Failed to get data. Data is null.');
+        }
+      } else {
+        print('Failed to get data. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  static Future<void> getQuestionById(String questionId, Function(Map<String, dynamic>) onDataReceived) async {
+    try {
+      final url = 'http://10.0.2.2:8000/api/discussion/question/$questionId';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.body);
+
+        if (jsonData.containsKey('data') && jsonData['data'] != null) {
+          Map<String, dynamic> data = jsonData['data'];
+          onDataReceived(data); 
+        } else {
+          print('Failed to get data. Data is null.');
+        }
+      } else {
+        print('Failed to get data. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  static Future<void> postQuestion(
+    BuildContext context, String userId, 
+    String question, DateTime? created
+  ) async {
+    final url = 'http://10.0.2.2:8000/api/discussion/question';
+    final response = await http.post(
+      Uri.parse(url),
+      body: { 
+        'userId' : userId,
+        'question' : question,
+        'created' : created.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Data berhasil dikirim!');
+    } else {
+      print('Gagal mengirim data. Kode status: ${response.statusCode}');
+    }
+  }
+
+  static Future<void> postAnswer(
+    BuildContext context, String userId, 
+    String answer, DateTime? created, String questionId,
+  ) async {
+    final url = 'http://10.0.2.2:8000/api/discussion/answer';
+    final response = await http.post(
+      Uri.parse(url),
+      body: { 
+        'userId' : userId,
+        'answer' : answer,
+        'questionId' : questionId,
+        'created' : created.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Data berhasil dikirim!');
+    } else {
+      print('Gagal mengirim data. Kode status: ${response.statusCode}');
+    }
+  }
+
+  static Future<void> getAnswerByQuestion(String questionId, Function(Map<String, dynamic>) onDataReceived) async {
+    try {
+      final url = 'http://10.0.2.2:8000/api/discussion/answer/$questionId';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.body);
+
+        if (jsonData.containsKey('data') && jsonData['data'] != null) {
+          Map<String, dynamic> data = jsonData['data'];
+          onDataReceived(data); 
+        } else {
+          print('Failed to get data. Data is null.');
+        }
+      } else {
+        print('Failed to get data. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  static Future<String> getUserById(String userId) async {
+    try {
+      final url = 'http://10.0.2.2:8000/api/user/getUser/$userId';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.body);
+
+        if (jsonData.containsKey('data') && jsonData['data'] != null) {
+          return jsonData['data'];
+        } else {
+          throw Exception('Failed to get data. Data is null.');
+        }
+      } else {
+        throw Exception('Failed to get data. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error: $error');
+    }
+  }
+
+  static Future<String> getIdByEmail(String email) async {
+    try {
+      final url = 'http://10.0.2.2:8000/api/user/getId/$email';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.body);
+
+        if (jsonData.containsKey('data') && jsonData['data'] != null) {
+          return jsonData['data'];
+        } else {
+          throw Exception('Failed to get data. Data is null.');
+        }
+      } else {
+        throw Exception('Failed to get data. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error: $error');
     }
   }
 }
