@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+  protected $auth;
+  protected $database;
+  protected $tablename;
+  
   public function __construct(Database $database, Auth $auth)
   {
     $this->database = $database;
@@ -22,29 +26,32 @@ class AuthController extends Controller
 
   public function registrasi(Request $request)
   {
-    try {
-      $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string',
-      ]);
+      try {
+          $request->validate([
+              'name' => 'required|string',
+              'email' => 'required|email|unique:users,email',
+              'password' => 'required|string',
+          ]);
 
-      $id = uniqid();
+          // Create user in Firebase Authentication
+          $user = $this->auth->createUserWithEmailAndPassword($request->input('email'), $request->input('password'));
+          $id = $user->uid;
 
-      $postData = [
-        'name' => $request->input('name'),
-        'email' => $request->input('email'),
-        'password' => Hash::make($request->input('password')),
-      ];
+          // Prepare data to store in Realtime Database
+          $postData = [
+              'userId' => $id,
+              'name' => $request->input('name'),
+              'email' => $request->input('email'),
+              'password' => Hash::make($request->input('password')),
+          ];
 
-      $this->database->getReference($this->tablename)->getChild($id)->set($postData);
+          // Store user data in Realtime Database
+          $this->database->getReference($this->tablename)->getChild($id)->set($postData);
 
-      $user = $this->auth->createUserWithEmailAndPassword($request->input('email'), $request->input('password'));
-
-      return response()->json(['success' => true, 'message' => 'Data added to Firebase and user created']);
-    } catch (\Exception $e) {
-      return response()->json(['success' => false, 'message' => $e->getMessage()]);
-    }
+          return response()->json(['success' => true, 'message' => 'Data added to Firebase and user created']);
+      } catch (\Exception $e) {
+          return response()->json(['success' => false, 'message' => $e->getMessage()]);
+      }
   }
 
   public function login(Request $request)
@@ -62,10 +69,10 @@ class AuthController extends Controller
       $idToken = $signInResult->idToken();
 
       // Set masa kadaluwarsa jadi satu jam
-      $customClaims = [
-        'expires_in' => time() + 3600,
-      ];
-      $this->auth->setCustomUserClaims($signInResult->firebaseUserId(), $customClaims);
+      // $customClaims = [
+      //   'expires_in' => time() + 3600,
+      // ];
+      // $this->auth->setCustomUserClaims($signInResult->firebaseUserId(), $customClaims);
 
       return response()->json(['token' => $idToken], 200);
     } catch (\Exception $e) {
