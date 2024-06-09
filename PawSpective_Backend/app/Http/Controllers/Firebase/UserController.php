@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Firebase;
 
 use App\Http\Controllers\Controller;
 use Kreait\Firebase\Contract\Database;
+use Illuminate\Http\JsonResponse;
+use Kreait\Firebase\Contract\Auth;
 use Kreait\Firebase\Exception\FirebaseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,10 +13,45 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    protected $database;
+    protected $tablename;
+
     public function __construct(Database $database)
     {
         $this->database = $database;
         $this->tablename = 'user';
+    }
+
+    public function index(): JsonResponse
+    {
+        try {
+            // Dapatkan referensi ke node pengguna di database realtime
+            $usersRef = $this->database->getReference('users');
+
+            // Dapatkan data pengguna dari database realtime
+            $usersSnapshot = $usersRef->getSnapshot();
+            $usersSnapshotValue = $usersSnapshot->getValue();
+            $currentUserId = auth()->id();
+            
+
+            $users = [];
+            if (is_array($usersSnapshotValue)) {
+                foreach ($usersSnapshotValue as $userId => $userData) {
+                // Jika ID pengguna tidak sama dengan ID pengguna saat ini, tambahkan ke daftar pengguna
+                if ($userId !== $currentUserId) {
+                    $users[] = [
+                        'id' => $userId,
+                        'name' => $userData['name'], // Misalnya, asumsikan ada field 'name' di node pengguna
+                        // Tambahkan informasi lain yang Anda perlukan dari node pengguna
+                    ];
+                }
+            }
+        }
+
+            return $this->success($users);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 
     public function getUser()

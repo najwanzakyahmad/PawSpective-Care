@@ -35,9 +35,9 @@ Route::put('/mypet/{id}', [PetController::class, 'update']);
 Route::delete('/mypet/{id}', [PetController::class, 'delete']);
 
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request){
-//     return $request->user();
-// });
+Route::apiResource('chat', ChatController::class)->only(['index','store','show']);
+Route::apiResource('chat_message', ChatMessageController::class)->only(['index','store']);
+Route::apiResource('user', UserController::class)->only(['index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("/test", function () {
