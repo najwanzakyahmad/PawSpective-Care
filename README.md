@@ -21,13 +21,15 @@ Langkah-langkah :
 6. jalankan "composer install", dan tunggu hingga selesai
 7. jalankan "composer require firevel/firebase-authentication --with-all-dependencies"
 8. jalankan "composer dump-autoload" dan "composer fund"
-9. Buka dan jalankan pawspective_care di vscode
-10. Buka terminal di vscode kemudian jalankan perintah "flutter pub get", tunggu hingga selesai
-11. Jika mengalami kendala ketika menjalankan "flutter pub get", coba jalankan "flutter pub outdated", setelah itu jalankan lagi "flutter pub get"
-12. Pastika sudah memiliki SDK dan environment lainnya untuk kebutuhan emulator
-13. Pilih device emulator untuk menjalankan kode, kami sarankan untuk memilih Pixel 7 Pro API 34
-14. Kemudian run project dengan klik button play berwarna hijau
-15. Tunggu dan jalankan aplikasi nya
+9. jalankan "composer require laravel-notification-channels/onesignal"
+10. jalankan "composer require laravel-notification-channels/onesignal"
+11. Buka dan jalankan pawspective_care di vscode
+12. Buka terminal di vscode kemudian jalankan perintah "flutter pub get", tunggu hingga selesai
+13. Jika mengalami kendala ketika menjalankan "flutter pub get", coba jalankan "flutter pub outdated", setelah itu jalankan lagi "flutter pub get"
+14. Pastika sudah memiliki SDK dan environment lainnya untuk kebutuhan emulator
+15. Pilih device emulator untuk menjalankan kode, kami sarankan untuk memilih Pixel 7 Pro API 34
+16. Kemudian run project dengan klik button play berwarna hijau
+17. Tunggu dan jalankan aplikasi nya
 
 
 Fitur utama aplikasi
