@@ -22,7 +22,7 @@ Langkah-langkah :
 7. jalankan "composer require firevel/firebase-authentication --with-all-dependencies"
 8. jalankan "composer dump-autoload" dan "composer fund"
 9. jalankan "composer require laravel-notification-channels/onesignal"
-10. jalankan "composer require laravel-notification-channels/onesignal"
+10. jalankan "composer require pusher/pusher-php-server"
 11. Buka dan jalankan pawspective_care di vscode
 12. Buka terminal di vscode kemudian jalankan perintah "flutter pub get", tunggu hingga selesai
 13. Jika mengalami kendala ketika menjalankan "flutter pub get", coba jalankan "flutter pub outdated", setelah itu jalankan lagi "flutter pub get"
