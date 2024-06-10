@@ -28,3 +28,40 @@ Langkah-langkah :
 13. Pilih device emulator untuk menjalankan kode, kami sarankan untuk memilih Pixel 7 Pro API 34
 14. Kemudian run project dengan klik button play berwarna hijau
 15. Tunggu dan jalankan aplikasi nya
+
+
+Fitur utama aplikasi
+1. Deskripsi dan manfaat fitur utama.
+   a. diskusi antar pet owner dan mahasiswa kedokteran :
+       fitur ini berguna bagi pengguna untuk sharing ilmu dan pengalaman selama merawat hewan peliharaan
+   
+   b. kebutuhan hewan peliharaan (jadwal vaksin, memantau pertumbuhan, jadwal makan, jadwal kesehatan, dan jadwal mandi) :
+       fitur ini berguna untuk memantau kebutuhan hewan peliharaan dan menyediakan fitur untuk alarm sebagai pengingat
+   
+   c. chat :
+       fitur ini berguna bagi pet owner untuk saling berkomunikasi, bedanya dengan fitur diskusi, pada chat ini bisa dilakukan lebih
+ intensif
+ 
+   d. tanya AI :
+       fitur ini berguna bagi pengguna untuk mendapatkan informasi seputar hewan peliharaan dengan cepat
+    
+3. Implementasi fitur utama dan dampaknya pada pengguna.
+   fitur yang berhasil diimplementasikan adalah sebagai berikut :
+     1. diskusi antar pet owner dan mahasiswa kedokteran
+     2. kebutuhan hewan peliharaan, namun belum berhasil menambahkan alarm
+   
+5. Keunggulan dan inovasi fitur tersebut.
+   1. diskusi antar pet owner dan mahasiswa kedokteran
+      bagi pet owner, fitur ini berguna untuk saling sharing dan bertukar pengalaman
+      bagi mahasiswa kedokteran, fitur ini berguna untuk menambah pengalaman, menambah relasi, dan membangun kepercayaan diri
+
+   3. kebutuhan hewan peliharaan
+      fitur ini memiliki keunggulan yaitu menyediakan template data hewan peliharaan yang akan disimpan, dan juga terhubung dengan alarm
+      
+   5. chat
+      fitur ini memiliki keunggulan yaitu realtime chat
+      
+   7. tanya AI
+      keunggulannya yaitu meghasilkan jawaban yang lumayan akurat, dan gratis
+
+
