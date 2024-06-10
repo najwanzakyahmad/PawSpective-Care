@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pawspective_care/network/get_headlines_repo.dart';
 import 'package:pawspective_care/models/article_model.dart';
-import 'package:pawspective_care/widgets/components/bottom_navigation_widget.dart';
 import 'package:pawspective_care/widgets/helpers/loading_animation_widget.dart';
 import 'package:pawspective_care/widgets/tiles/news_article_tile_widget.dart';
-import 'package:pawspective_care/widgets/components/gradient_container_widget.dart';
+import 'package:pawspective_care/widgets/components/search.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
