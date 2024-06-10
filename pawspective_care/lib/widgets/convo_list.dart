@@ -8,7 +8,7 @@ class ConversationList extends StatefulWidget {
   String time;
   bool isMessageRead;
   ConversationList(
-      {required this.name,
+      {super.key, required this.name,
       required this.messageText,
       required this.imageUrl,
       required this.time,

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pawspective_care/pallete.dart';
-import 'package:pawspective_care/screens/Information.dart';
 import 'package:pawspective_care/screens/MyPet.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:pawspective_care/screens/navbar.dart';
-import 'package:pawspective_care/network/api.dart';
+import 'package:pawspective_care/screens/profilePage.dart';
+
 
 class HomePage extends StatefulWidget {
   final String userId;
@@ -17,35 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 2;
-  String userName = '';
-  List<String> backendData = [];
-  bool isLoading = false;
-
-  Future<void> getName() async {
-    String name = await Api.getUserById(widget.userId);
-    setState(() {
-      userName = name.toUpperCase();
-    });
-  }
-
-  Future<void> _getDataNameFromBackEnd() async {
-    setState(() {
-      isLoading = true;
-    });
-    final data = await Api.getDataNameFromBackEnd(widget.userId);
-    setState(() {
-      backendData = data.take(2).toList();
-      isLoading = false;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getName();
-    _getDataNameFromBackEnd();
-  }
+  int _selectedIndex = 2; 
 
   @override
   Widget build(BuildContext context) {
@@ -59,14 +31,14 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               SizedBox(height: 27),
               _topBar(),
-              SizedBox(height: 30,),
+              _gap(),
               _greetings(),
               _gap(),
-              _myPetSection(),
+              _myPet(),
               _gap(),
               _discussSession(),
               _gap(),
-              Expanded(child: Container()),
+               Expanded(child: Container()),
             ],
           ),
           Positioned.fill(
@@ -89,13 +61,13 @@ class _HomePageState extends State<HomePage> {
                 MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId)),
               );
               break;
-            case 1:
-              // Ke halaman MyDoctor
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Information(userId: widget.userId)),
-              );
-              break;
+            // case 1:
+            //   // Ke halaman MyDoctor
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => ChatPage()),
+            //   );
+            //   break;
             case 2:
               // Ke halaman MyPet
               Navigator.push(
@@ -110,13 +82,13 @@ class _HomePageState extends State<HomePage> {
             //     MaterialPageRoute(builder: (context) => MyDoctor()),
             //   );
             //   break;
-            // case 4:
-            //   // Ke halaman Profil
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (context) => ProfilPage()),
-            //   );
-            //   break;
+            case 4:
+              // Ke halaman Profil
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen(userId: widget.userId)),
+              );
+              break;
             // default:
             // break;
           }
@@ -147,12 +119,12 @@ class _HomePageState extends State<HomePage> {
       maxChildSize: 0.9,
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
+          
           decoration: const BoxDecoration(
             color: Palette.mainColor,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+              topLeft: Radius.circular(20), 
+              topRight: Radius.circular(20))
           ),
           child: ListView(
             controller: scrollController,
@@ -230,7 +202,7 @@ class _HomePageState extends State<HomePage> {
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  text: "Topic",
+                  text: "Pussy",
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     color: Colors.white,
@@ -274,39 +246,61 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _myPetSection() {
+  AspectRatio _myPet() {
     return AspectRatio(
       aspectRatio: 336 / 140,
-      child: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (var data in backendData)
-                    _cardMyPet(data.split(' - ')[1]
-                  ),
-                  _nextButtonMyPet()
-                ],
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _cardMyPet(),
+                _nextButtonMyPet(),
+              ],
             ),
+          ),
+        ],
+      ),
     );
   }
 
+  Container _nextButtonMyPet() {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        color: Palette.fourthColor,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () {
+              debugPrint("Button MyPet tapped");
+            },
+            icon: const Icon(
+              Icons.chevron_right,
+              color: Palette.secondaryColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-
-  GestureDetector _cardMyPet(String data) {
+  GestureDetector _cardMyPet() {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context, 
-          MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId))
-        );
+        //link kemana
+        debugPrint('Card tapped.');
       },
       child: Container(
-        width: 116,
-        height: 128,
+        width: 136,
+        height: 148,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
@@ -322,7 +316,7 @@ class _HomePageState extends State<HomePage> {
             RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                text: data,
+                text: "Pussy",
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   color: Colors.white,
@@ -331,29 +325,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  GestureDetector _nextButtonMyPet() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context, 
-          MaterialPageRoute(builder: (context) => MyPet(userId: widget.userId))
-        );
-      },
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: Palette.fourthColor,
-        ),
-        child: Icon(
-          Icons.chevron_right,
-          color: Palette.secondaryColor,
         ),
       ),
     );
@@ -378,9 +349,9 @@ class _HomePageState extends State<HomePage> {
                   RichText(
                     textAlign: TextAlign.left,
                     text: TextSpan(
-                      text: 'HELLO\n$userName!',
+                      text: "HELLO\nUSER!",
                       style: GoogleFonts.inter(
-                        fontSize: 35,
+                        fontSize: 45,
                         color: Colors.white,
                         fontWeight: FontWeight.w800,
                       ),

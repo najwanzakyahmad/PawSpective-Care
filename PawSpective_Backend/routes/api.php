@@ -7,6 +7,7 @@ use App\Http\Controllers\Firebase\QuestionController;
 use App\Http\Controllers\Firebase\AnswerController;
 use App\Http\Controllers\Firebase\ArtikelController;
 use App\Http\Controllers\Firebase\PetController;
+use App\Http\Controllers\Firebase\ProfileController;
 use App\Http\Controllers\Firebase\UserController;
 
 Route::post('/auth/register', [AuthController::class, 'registrasi']);
@@ -27,6 +28,7 @@ Route::get('/discussion/answer/{questionId}', [AnswerController::class, 'getAnsw
 Route::get('/user', [UserController::class, 'getUser']);
 Route::get('/user/getUser/{id}', [UserController::class, 'getUserById']);
 Route::get('/user/getId/{email}', [UserController::class, 'getIdByEmail']);
+Route::get('/getuser/{id}', [UserController::class, 'getUserdata']);
 
 Route::post('/mypet', [PetController::class, 'store']);
 Route::get('/mypet/{id}', [PetController::class, 'get']);
@@ -34,10 +36,7 @@ Route::get('/mypet/getName/{OwnerId}', [PetController::class, 'getNameByOwnerId'
 Route::put('/mypet/{id}', [PetController::class, 'update']);
 Route::delete('/mypet/{id}', [PetController::class, 'delete']);
 
-
-Route::apiResource('chat', ChatController::class)->only(['index','store','show']);
-Route::apiResource('chat_message', ChatMessageController::class)->only(['index','store']);
-Route::apiResource('user', UserController::class)->only(['index']);
+Route::post('/profile', [ProfileController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("/test", function () {

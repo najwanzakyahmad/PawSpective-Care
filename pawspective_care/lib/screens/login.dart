@@ -4,16 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pawspective_care/Services/auth_services.dart';
 import 'package:pawspective_care/Services/globals.dart';
-import 'package:pawspective_care/RoundedButton.dart';
 import 'package:pawspective_care/screens/homepage.dart';
-import 'package:pawspective_care/screens/starting.dart';
 import 'package:pawspective_care/screens/signup.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import '../network/api.dart';
 import '../pallete.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -80,19 +78,19 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1F2544),
+            decoration: const BoxDecoration(
+              color: Color(0xFF1F2544),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 200.0),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25),
                   topRight: Radius.circular(25),
                 ),
-                color: const Color(0xFF474F7A),
+                color: Color(0xFF474F7A),
               ),
               height: double.infinity,
               width: double.infinity,
@@ -116,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       },
                       decoration: InputDecoration(
-                        label:Text('EMAIL', style: TextStyle(
+                        label:const Text('EMAIL', style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),), 
                         filled: true, // Aktifkan background fill
@@ -138,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       },
                       decoration: InputDecoration(
-                        label:Text('PASSWORD', style: TextStyle(
+                        label:const Text('PASSWORD', style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),), 
                         filled: true, // Aktifkan background fill
@@ -154,20 +152,19 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: _isLoading ? null : loginPressed, // Nonaktifkan tombol jika isLoading true
                     child: _isLoading // Tampilkan CircularProgressIndicator jika isLoading true, jika tidak tampilkan teks tombol
-                        ? CircularProgressIndicator() 
-                        : Text("LOGIN"),
+                        ? const CircularProgressIndicator() 
+                        : const Text("LOGIN"),
                   ),
 
                   const SizedBox(height: 30),
 
-                  Container(width: 250,
+                  SizedBox(width: 250,
                     child: Material(
                       elevation: 5, 
                       color: Palette.grey,
                       borderRadius: BorderRadius.circular(100),
                       child: MaterialButton(
                         onPressed: (){
-                          ;
                         },
                         minWidth: 120,
                         height: 20,
@@ -175,10 +172,10 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset('assets/images/google.png', height: 24), // Replace 'google_icon.png' with your actual image asset
-                            SizedBox(width: 5), // Add some spacing between the image and text
-                            Text(
+                            const SizedBox(width: 5), // Add some spacing between the image and text
+                            const Text(
                               'Sign in with Google',
-                              style: const TextStyle(color: Palette.thirdColor, fontSize: 16),
+                              style: TextStyle(color: Palette.thirdColor, fontSize: 16),
                             ),
                           ],
                         ),
@@ -190,8 +187,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 160, left: 25),
+          const Padding(
+            padding: EdgeInsets.only(top: 160, left: 25),
             child: Text(
               'LOGIN',
               style: TextStyle(
@@ -210,11 +207,11 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => SignUpPage(),
+                    builder: (BuildContext context) => const SignUpPage(),
                   ),
                 );
               },
-              child: Text('Belum punya akun? Daftar sekarang',
+              child: const Text('Belum punya akun? Daftar sekarang',
               textAlign: TextAlign.center, 
               style: TextStyle(color: Colors.white,)),
             ),

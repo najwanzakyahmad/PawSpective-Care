@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pawspective_care/Services/auth_services.dart';
-import 'package:pawspective_care/Services/globals.dart';
 import '../pallete.dart';
 import 'package:pawspective_care/screens/login.dart';
 import 'package:http/http.dart' as http;
-import '../RoundedButton.dart'; // Jika file RoundedButton.dart berada di level yang sama dengan SignUpPage
+// Jika file RoundedButton.dart berada di level yang sama dengan SignUpPage
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -29,7 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
       });
 
       // Simulasi proses pembuatan akun
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
 
       http.Response response = await AuthServices.register(_name, _email, _password);
       Map responseMap = jsonDecode(response.body);
@@ -56,7 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void errorSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
-      content: Text(message, style: TextStyle(color: Colors.white)),
+      content: Text(message, style: const TextStyle(color: Colors.white)),
       backgroundColor: Colors.red,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -72,14 +71,14 @@ class _SignUpPageState extends State<SignUpPage> {
             Container(
                 height: MediaQuery.of(context).size.height,
                 width: double.infinity,
-                decoration: BoxDecoration(color: const Color(0xFF1F2544))),
+                decoration: const BoxDecoration(color: Color(0xFF1F2544))),
             Padding(
               padding: const EdgeInsets.only(top: 200.0),
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-                  color: const Color(0xFF474F7A),
+                  color: Color(0xFF474F7A),
                 ),
                 height: MediaQuery.of(context).size.height - 200,
                 width: double.infinity,
@@ -95,7 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           });
                         },
                         decoration: InputDecoration(
-                          label: Text(
+                          label: const Text(
                             'NAME',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -118,7 +117,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           });
                         },
                         decoration: InputDecoration(
-                          label: Text(
+                          label: const Text(
                             'EMAIL',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -142,7 +141,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                         obscureText: true,
                         decoration: InputDecoration(
-                          label: Text(
+                          label: const Text(
                             'PASSWORD',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -160,13 +159,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     ElevatedButton(
                       onPressed: _isLoading ? null : createAccountPressed, // Nonaktifkan tombol jika isLoading true
                       child: _isLoading // Tampilkan CircularProgressIndicator jika isLoading true, jika tidak tampilkan teks tombol
-                          ? CircularProgressIndicator() 
-                          : Text("SIGN UP"),
+                          ? const CircularProgressIndicator() 
+                          : const Text("SIGN UP"),
                     ),
                     const SizedBox(
                       height: 30,
                     ),
-                    Container(
+                    SizedBox(
                       width: 250,
                       child: Material(
                         elevation: 5,
@@ -182,10 +181,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset('assets/images/google.png', height: 24), // Replace 'google_icon.png' with your actual image asset
-                              SizedBox(width: 5), // Add some spacing between the image and text
-                              Text(
+                              const SizedBox(width: 5), // Add some spacing between the image and text
+                              const Text(
                                 'Sign in with Google',
-                                style: const TextStyle(color: Palette.thirdColor, fontSize: 16),
+                                style: TextStyle(color: Palette.thirdColor, fontSize: 16),
                               ),
                             ],
                           ),
@@ -196,8 +195,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 160, left: 25),
+            const Padding(
+              padding: EdgeInsets.only(top: 160, left: 25),
               child: Text(
                 'SIGN UP',
                 style: TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.bold),
@@ -212,11 +211,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => LoginPage(),
+                      builder: (BuildContext context) => const LoginPage(),
                     ),
                   );
                 },
-                child: Text(
+                child: const Text(
                   'Sudah punya akun? Login sekarang',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white),
