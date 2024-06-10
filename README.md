@@ -5,3 +5,10 @@ Kelompok PetPals:
 - Najwan Zaky Ahmad
 - Aryagara Kristandy Rukmana Putra
 - Hafidzon Al Hibrizi
+
+Tech Stack
+- Flutter
+- Laravel
+- Firebase
+- Pusher
+- OneSignal
