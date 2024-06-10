@@ -10,7 +10,7 @@ import '../screens/DiscussionQuestion.dart';
 
 class Api {
 
-  static Future<List<String>> getDataNameFromBackEnd(List<String> backendData, bool isLoading, String userId) async {
+  static Future<List<String>> getDataNameFromBackEnd(String userId) async {
     try {
       final url = 'http://10.0.2.2:8000/api/mypet/getName/$userId';
       final response = await http.get(Uri.parse(url));

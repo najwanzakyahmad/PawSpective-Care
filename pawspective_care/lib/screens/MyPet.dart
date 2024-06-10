@@ -50,7 +50,7 @@ class _MyPetState extends State<MyPet> {
     setState(() {
         isLoading = true;
     });
-    final data = await Api.getDataNameFromBackEnd(backendData, isLoading, widget.userId);
+    final data = await Api.getDataNameFromBackEnd(widget.userId);
     setState(() {
       backendData = data;
       isLoading = false;
