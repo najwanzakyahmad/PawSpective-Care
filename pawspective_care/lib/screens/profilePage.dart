@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 120,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.asset('assets/images/21.jpg'),
+                        child: Image.asset('assets/images/profile.png'),
                       ),
                     ),
                     Positioned(

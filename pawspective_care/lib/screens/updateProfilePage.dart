@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:pawspective_care/screens/FormFieldBuilder.dart';
+import 'package:pawspective_care/Services/getData.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../pallete.dart';
+import 'package:pawspective_care/screens/FormFieldBuilder.dart';
 import 'package:http/http.dart' as http;
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -15,23 +16,54 @@ class UpdateProfileScreen extends StatefulWidget {
     required this.userId,
     required this.username,
     required this.email,
-  }) : super(key: key); // Menambahkan super(key: key)
+  }) : super(key: key);
 
   @override
   _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
 }
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
-  String? _phoneNumber, _city, _province;
+  late TextEditingController _phoneNumberController;
+  late TextEditingController _cityController;
+  late TextEditingController _provinceController;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneNumberController = TextEditingController();
+    _cityController = TextEditingController();
+    _provinceController = TextEditingController();
+    fetchData();
+  }
+
+  void fetchData() async {
+    try {
+      // print(widget.userId);
+      Map<String, dynamic> userData = await UserDataService.getAllUserData(widget.userId);
+      print(userData);
+      setState(() {
+        _phoneNumberController.text = userData['phoneNumber'] ?? 'Phone Number Not Found';
+        _cityController.text = userData['city'] ?? 'City Not Found';
+        _provinceController.text = userData['province'] ?? 'Province Not Found';
+      });
+      print(_phoneNumberController.text);
+      print(_cityController.text);
+      print(_provinceController.text);
+    } catch (e) {
+      print('Error fetching user data: $e'); // Tangkap dan cetak error jika terjadi
+    }
+  }
 
   void updateProfile() async {
-    var url = 'https://your-laravel-backend.com/update-profile';
+    var url = 'http://10.0.2.2:8000/api/profile';
 
     var response = await http.post(Uri.parse(url), body: {
       'userId': widget.userId,
-      'phoneNumber': _phoneNumber,
-      'city': _city,
-      'province': _province,
+      'username': widget.username,
+      'email': widget.email,
+      'phoneNumber': _phoneNumberController.text,
+      'city': _cityController.text,
+      'province': _provinceController.text,
     });
 
     if (response.statusCode == 200) {
@@ -74,7 +106,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     height: 120,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: Image.asset('assets/images/21.jpg'),
+                      child: Image.asset('assets/images/profile.png'),
                     ),
                   ),
                   Positioned(
@@ -149,23 +181,65 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
 
                     const SizedBox(height: 15),
-                    FormFieldsBuilder.buildTextField("Nomor Telepon", (String? value) {
-                      setState(() {
-                        _phoneNumber = value;
-                      });
-                    }),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                        controller: _phoneNumberController,
+                        decoration: InputDecoration(
+                          label: const Text(
+                            'Nomor Telepon',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFFFFD0EC),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100.0),
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 15),
-                    FormFieldsBuilder.buildTextField("Kota", (String? value) {
-                      setState(() {
-                        _city = value;
-                      });
-                    }),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                        controller: _cityController,
+                        decoration: InputDecoration(
+                          label: const Text(
+                            'Kota',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFFFFD0EC),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100.0),
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 15),
-                    FormFieldsBuilder.buildTextField("Provinsi", (String? value) {
-                      setState(() {
-                        _province = value;
-                      });
-                    }),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                        controller: _provinceController,
+                        decoration: InputDecoration(
+                          label: const Text(
+                            'Provinsi',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFFFFD0EC),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100.0),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

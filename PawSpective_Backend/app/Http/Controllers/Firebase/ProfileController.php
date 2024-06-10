@@ -17,17 +17,16 @@ class ProfileController extends Controller
         $this->database = $database;
         $this->tablename = 'profile';
     }
-    public function updateProfile(Request $request)
+    public function store(Request $request)
     {
         try {
-            // Validasi data yang diterima
             $validatedData = $request->validate([
-                '_username' => 'required',
-                '_email' => 'required',
-                '_password' => 'required',
-                '_phoneNumber' => 'required',
-                '_city' => 'required',
-                '_province' => 'required',
+                'userId' => 'required',
+                'username' => 'required',
+                'email' => 'required',
+                'phoneNumber' => 'required',
+                'city' => 'required',
+                'province' => 'required',
             ]);
     
             // Simpan data ke Firebase
@@ -36,17 +35,36 @@ class ProfileController extends Controller
             $newDocId = $newDocRef->getKey();
     
             $postData = [
-                '_username' => $request->input('Username'),
-                '_email' => $request->input('Email'),
-                '_password' => $request->input('Password'),
-                '_phoneNumber' => $request->input('PhoneNumber'),
-                '_city' => $request->input('City'),
-                '_province' => $request->input('Province'),
+                'userId' => $request->input('userId'),
+                'username' => $request->input('username'),
+                'email' => $request->input('email'),
+                'phoneNumber' => $request->input('phoneNumber'),
+                'city' => $request->input('city'),
+                'province' => $request->input('province'),
             ];
     
             $newPost = $newDocRef->set($postData);
     
             return response()->json(['success' => true, 'message' => 'Profile updated successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+    public function getProfile($data)
+    {
+        try {
+            $users = $this->database->getReference($this->tablename)->getValue();
+    
+            if (!empty($users)) {
+                foreach ($users as $userId => $userData) {
+                    if ($userData['userId'] == $data) {
+                        return response()->json(['success' => true, 'data' => $userData]);
+                    }
+                }
+                return response()->json(['success' => false, 'message' => 'Data not found']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'No users found']);
+            }
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }

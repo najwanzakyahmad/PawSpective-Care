@@ -37,6 +37,7 @@ Route::put('/mypet/{id}', [PetController::class, 'update']);
 Route::delete('/mypet/{id}', [PetController::class, 'delete']);
 
 Route::post('/profile', [ProfileController::class, 'store']);
+Route::get('/profile/{id}', [ProfileController::class, 'getProfile']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("/test", function () {
